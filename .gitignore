@@ -1,0 +1,50 @@
+# ========================
+# ASPDEMAT Project Gitignore
+# ========================
+
+# 👉 Logs e arquivos temporários
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# 👉 Dependências
+node_modules/
+frontend/node_modules/
+
+# 👉 Build (output final)
+dist/
+frontend/dist/
+frontend/dist-ssr/
+
+# 👉 Arquivos de ambiente (com senhas!)
+.env
+frontend/.env
+*.local
+
+# 👉 Arquivos de sistema
+.DS_Store
+Thumbs.db
+
+# 👉 Configurações de editores
+.vscode/*
+!.vscode/extensions.json
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# 👉 Arquivos de produção gerados pelo Docker (opcional)
+docker-compose.override.yml
+.env.production
+.env.development
+.env.*.local
+
+# 👉 Optional backups / sistema
+*.bak
+*.tmp
