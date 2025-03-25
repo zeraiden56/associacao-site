@@ -1,19 +1,19 @@
 # 📊 Projeto ASPDEMAT - Painel Administrativo + Site Público
 
-**Data de geração:** 25/03/2025
+**Data de geração:** `25/03/2025`
 
 ---
 
 ## ✅ Visão Geral
 
-Este projeto é o sistema web da **ASPDEMAT** contendo:
+Sistema web da **ASPDEMAT**, com:
 
-- 🏠 Site público com exibição de notícias.
-- 🔐 Área administrativa com autenticação e CRUD de notícias.
-- 📤 Upload de imagens.
-- 📦 Backend em PHP + PostgreSQL.
-- ⚛️ Frontend com React (Vite + Tailwind).
-- 🐳 Infraestrutura em Docker + Compose.
+- 🏠 **Site público** com exibição de notícias
+- 🔐 **Área administrativa** com login + CRUD de notícias
+- 🖼️ **Upload de imagens** diretamente no backend
+- ⚙️ Backend em **PHP + PostgreSQL**
+- ⚛️ Frontend em **React (Vite + Tailwind)**
+- 🐳 Deploy via **Docker + Docker Compose**
 
 ---
 
@@ -25,7 +25,7 @@ Este projeto é o sistema web da **ASPDEMAT** contendo:
 | Banco de Dados| PostgreSQL 15           |
 | Frontend      | React + Vite            |
 | Estilização   | TailwindCSS             |
-| Auth/Cripto   | pgcrypto + crypt()      |
+| Auth/Cripto   | `pgcrypto` + `crypt()`  |
 | Deploy        | Docker + Docker Compose |
 | Ambiente      | VPS via SSH             |
 
@@ -33,23 +33,29 @@ Este projeto é o sistema web da **ASPDEMAT** contendo:
 
 ## 🔐 Autenticação
 
-- Verificação com `pgcrypto` usando:
-  ```sql
-  SELECT * FROM admins 
-  WHERE username = $1 AND password = crypt($2, password);
+Admin login seguro usando **`pgcrypto`**:
 
-Admins são armazenados na tabela admins.
+```sql
+SELECT * FROM admins 
+WHERE username = $1 
+AND password = crypt($2, password);
+```
+
+---
 
 ## 📁 Estrutura do Projeto
 
+```
 associacao-site/
 ├── backend-php/
 │   ├── api.php
 │   ├── db.php
 │   ├── upload_noticia.php
+│   └── index.php
+│
 ├── frontend/
 │   ├── public/
-│   │   ├── index.html   ← título da aba configurado aqui
+│   │   └── index.html        ← título da aba configurado aqui
 │   ├── src/
 │   │   ├── pages/
 │   │   │   ├── Home.jsx
@@ -60,13 +66,19 @@ associacao-site/
 │   │   └── components/
 │   │       ├── Header.jsx
 │   │       └── PrivateRoute.jsx
-│   └── .env           ← define VITE_API_URL
-├── .env               ← define dados do banco
-├── deploy.sh          ← automatiza build e subida
-├── docker-compose.yml
+│   └── .env                 ← define VITE_API_URL
+│
+├── .env                     ← dados do banco de dados (NÃO subir no Git)
+├── deploy.sh                ← automatiza build e subida
+├── docker-compose.yml       ← orquestra os containers
+└── README.md
+```
+
+---
 
 ## 🧩 Tabelas do Banco
 
+```sql
 CREATE TABLE admins (
   id SERIAL PRIMARY KEY,
   username VARCHAR(50) UNIQUE NOT NULL,
@@ -99,44 +111,57 @@ CREATE TABLE contatos (
   mensagem TEXT,
   criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+```
 
-## 🚀 Deploy
+---
 
-# Em qualquer terminal com acesso SSH:
+## 🚀 Deploy Rápido
+
+```bash
 ./deploy.sh
+```
 
-Esse script realiza:
+Esse script executa:
 
+```bash
 cd frontend
 npm run build
 cd ..
 docker-compose down
 docker-compose up --build -d
+```
+
+---
 
 ## ⚠️ Cuidados
-Após npm run build, o Vite sobrescreve o dist/index.html com o título padrão.
 
-✅ Para mudar o nome da aba, edite frontend/public/index.html
+- O Vite sobrescreve `dist/index.html` após build.
+- Para alterar o título da aba do navegador, edite:  
+  `frontend/public/index.html`
 
-Use dois arquivos .env:
+- Use dois `.env` separados:
+  - `/.env` → Dados do banco
+  - `/frontend/.env` → `VITE_API_URL=http://SEU_IP`
 
-Um na raiz → banco de dados.
+---
 
-Outro no frontend → VITE_API_URL=http://SEU_IP.
+## 💡 Dicas para quem for assumir depois (ex: `o3 mini`)
 
-## 🧠 Dicas para próximos devs (como o o3 mini)
-Só acessa o painel (/admin/dashboard) se estiver logado com token (localStorage).
+- A dashboard só é acessível com token no `localStorage`.
+- A rota `/admin/dashboard` é protegida por `PrivateRoute`.
+- Upload de imagem vai para `/uploads` no backend.
+- Se algo der errado, cheque:
+  ```bash
+  docker logs associacao-site_backend_1
+  ```
 
-Frontend usa PrivateRoute para proteger rotas.
+- Garanta que `.env` do frontend foi buildado com:
+  ```bash
+  npm run build
+  ```
 
-Para subir imagem: formulário faz upload e backend salva em /uploads.
+- Sempre rode o `./deploy.sh` após alterações.
 
-Se algo der errado, cheque:
+---
 
-docker logs associacao-site_backend_1
-
-Se .env do frontend foi buildado antes de subir
-
-Recomendo rodar deploy.sh sempre após mudanças.
-
-
+> Projeto mantido com ❤️ e muito café.
